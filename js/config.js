@@ -23,7 +23,7 @@ export const CONFIG = {
   API: {
     baseUrl: (typeof window !== 'undefined' && window.location && window.location.hostname === 'localhost')
       ? 'http://localhost:3000'
-      : 'https://emotion-learning-backend.onrender.com',
+      : 'https://emotion-learning-companion.onrender.com',
     endpoint: '/api/answer',
     maxTokens: 600
   },
