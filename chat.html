@@ -590,9 +590,16 @@
       }
 
       .tool-btn {
-        min-width: 140px;
-        white-space: nowrap;
-        font-size: 0.9rem;
+        min-width: auto;
+        width: 52px;
+        height: 52px;
+        padding: var(--spacing-sm);
+        font-size: 1.35rem;
+        justify-content: center;
+      }
+      
+      .tool-btn span {
+        display: none;
       }
 
       .emotion-panel {
@@ -667,12 +674,20 @@
       .sidebar-tools {
         gap: var(--spacing-xs);
         padding: var(--spacing-xs);
+        justify-content: flex-start;
       }
       
       .tool-btn {
-        min-width: 110px;
+        min-width: auto;
+        width: 48px;
+        height: 48px;
         padding: var(--spacing-sm);
-        font-size: 0.85rem;
+        font-size: 1.25rem;
+        justify-content: center;
+      }
+      
+      .tool-btn span {
+        display: none;
       }
       
       .chat-container {
@@ -797,10 +812,16 @@
       }
       
       .tool-btn {
-        min-width: 100px;
-        padding: var(--spacing-xs) var(--spacing-sm);
-        font-size: 0.8rem;
-        gap: var(--spacing-xs);
+        min-width: auto;
+        width: 44px;
+        height: 44px;
+        padding: var(--spacing-xs);
+        font-size: 1.1rem;
+        justify-content: center;
+      }
+      
+      .tool-btn span {
+        display: none;
       }
       
       .chat-container {
@@ -917,16 +938,16 @@
     <!-- Sidebar Tools -->
     <aside class="sidebar-tools">
       <button id="docTabBtn" class="tool-btn" title="Documents">
-        📄 Documents
+        📄<span> Documents</span>
       </button>
       <button id="uploadBtn" class="tool-btn" title="Upload document">
-        ⬆️ Upload
+        ⬆️<span> Upload</span>
       </button>
       <button id="clearBtn" class="tool-btn" title="Clear chat">
-        🗑️ Clear
+        🗑️<span> Clear</span>
       </button>
-      <button class="tool-btn" onclick="window.location.href='analytics.html'">
-        📊 Analytics
+      <button class="tool-btn" onclick="window.location.href='analytics.html'" title="Analytics">
+        📊<span> Analytics</span>
       </button>
     </aside>
 
