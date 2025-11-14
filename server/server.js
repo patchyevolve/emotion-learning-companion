@@ -13,24 +13,16 @@ console.log("Loaded GROQ_API_KEY?", process.env.GROQ_API_KEY ? "YES" : "NO");
 const app = express();
 app.use(express.json({ limit: "2mb" }));
 
-// CORS configuration for production
-const corsOptions = {
-  origin: [
-    'http://localhost:8080',
-    'http://localhost:3000',
-    'https://keen-creponne-2dff93.netlify.app',
-    /\.netlify\.app$/  // Allow all Netlify subdomains
-  ],
+// CORS configuration - allow all origins for now
+app.use(cors({
+  origin: '*',
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
   optionsSuccessStatus: 200
-};
+}));
 
-app.use(cors(corsOptions));
-
-// Handle preflight requests
-app.options('*', cors(corsOptions));  
+// Handle preflight requests explicitly
+app.options('*', cors());  
 
 // ----------------------------
 // ENV & KEY CHECK
@@ -114,6 +106,7 @@ async function callGroqWithRetries(payload, maxRetries = 2) {
 // HEALTH CHECK ENDPOINT
 // ----------------------------
 app.get('/health', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
   res.json({ 
     status: 'ok',
     timestamp: new Date().toISOString(),
@@ -125,6 +118,11 @@ app.get('/health', (req, res) => {
 // MAIN ANSWER ROUTE
 // ----------------------------
 app.post("/api/answer", async (req, res) => {
+  // Set CORS headers explicitly
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   try {
     if (isRateLimited()) {
       return res.status(429).json({
