@@ -19,10 +19,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   optionsSuccessStatus: 200
-}));
-
-// Handle preflight requests explicitly
-app.options('*', cors());  
+}));  
 
 // ----------------------------
 // ENV & KEY CHECK
