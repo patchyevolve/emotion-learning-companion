@@ -1,0 +1,15 @@
+{
+  "name": "emotion-aware-learning-companion",
+  "version": "1.0.0",
+  "description": "Emotion-Aware Learning Companion with RAG",
+  "scripts": {
+    "start": "node start.js",
+    "dev": "node start.js",
+    "server": "cd server && npm start",
+    "frontend": "python -m http.server 8080"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
+

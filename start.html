@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Learning Companion - Launcher</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg-primary: #020617;
+      --bg-card: #020617;
+      --primary: #6366f1;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+
+    .start-container {
+      position: relative;
+      width: 100%;
+      max-width: 480px;
+      padding: 2.5rem;
+      border-radius: 1.5rem;
+      background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.25), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.25), transparent 55%),
+                  var(--bg-card);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      box-shadow: 0 25px 80px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .start-container::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: conic-gradient(from 180deg, rgba(96, 165, 250, 0.4), rgba(129, 140, 248, 0.8), rgba(56, 189, 248, 0.4), rgba(96, 165, 250, 0.4));
+      opacity: 0.4;
+      z-index: -2;
+      animation: rotateBorder 10s linear infinite;
+    }
+
+    .start-container::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 1.4rem;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.98));
+      z-index: -1;
+    }
+
+    .title {
+      font-size: 1.15rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .headline {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #e5e7eb, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtext {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.75rem;
+    }
+
+    .status-line {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      min-height: 1rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #4b5563;
+    }
+
+    .status-line.error .status-dot {
+      background: #f97373;
+    }
+
+    .status-line.ok .status-dot {
+      background: #22c55e;
+    }
+
+    .start-button-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.25rem;
+    }
+
+    .start-button {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 2.5rem;
+      border-radius: 999px;
+      border: none;
+      background: radial-gradient(circle at top left, #4f46e5, #06b6d4);
+      color: #f9fafb;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.7);
+      transition: transform 150ms ease, box-shadow 150ms ease, opacity 150ms ease;
+    }
+
+    .start-button::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: conic-gradient(from 90deg, rgba(248, 250, 252, 0.1), rgba(248, 250, 252, 0.4), rgba(248, 250, 252, 0.1));
+      mix-blend-mode: screen;
+      opacity: 0;
+      transform: translateX(-40%);
+      transition: opacity 250ms ease, transform 700ms ease;
+    }
+
+    .start-button:hover::before {
+      opacity: 1;
+      transform: translateX(40%);
+    }
+
+    .start-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.9);
+    }
+
+    .start-button:active {
+      transform: translateY(0px) scale(0.99);
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.9);
+    }
+
+    .start-button[disabled] {
+      opacity: 0.6;
+      cursor: default;
+      transform: none;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.7);
+    }
+
+    .start-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(248, 250, 252, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .start-icon-inner {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.9);
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+
+    .start-label {
+      letter-spacing: 0.16em;
+    }
+
+    .machine-strip {
+      margin-top: 1.5rem;
+      height: 30px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 1));
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .machine-strip-inner {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(56, 189, 248, 0.5),
+        rgba(129, 140, 248, 0.7),
+        rgba(56, 189, 248, 0.5),
+        transparent);
+      background-size: 200% auto;
+      opacity: 0.5;
+      animation: conveyor 3s linear infinite;
+      filter: blur(2px);
+    }
+
+    .machine-lights {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.7rem;
+    }
+
+    .machine-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #1f2937;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      transition: background 200ms ease, box-shadow 200ms ease;
+    }
+
+    .start-container.starting .machine-dot {
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+
+    .start-container.starting {
+      animation: openMachine 600ms ease forwards;
+    }
+
+    .start-container.starting .start-button {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.25); opacity: 0.7; }
+    }
+
+    @keyframes conveyor {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    @keyframes openMachine {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-8px) scale(1.02); opacity: 1; }
+    }
+
+    .status-text-error {
+      color: #f97373;
+    }
+  </style>
+</head>
+<body>
+  <div class="start-container" id="startContainer">
+    <div class="title">AI Learning Companion</div>
+    <div class="headline">Emotion-Aware Learning Console</div>
+    <div class="subtext">
+      Press <strong>Start</strong> to initialize the learning engine. We will check your connection
+      and bring the dashboard online.
+    </div>
+
+    <div class="machine-strip">
+      <div class="machine-strip-inner"></div>
+      <div class="machine-lights">
+        <div class="machine-dot"></div>
+        <div class="machine-dot"></div>
+        <div class="machine-dot"></div>
+      </div>
+    </div>
+
+    <div class="start-button-wrapper">
+      <button class="start-button" id="startButton">
+        <span class="start-icon"><span class="start-icon-inner"></span></span>
+        <span class="start-label">Start</span>
+      </button>
+    </div>
+
+    <div class="status-line" id="statusLine">
+      <span class="status-dot"></span>
+      <span id="statusText"></span>
+    </div>
+  </div>
+
+  <script>
+    const startBtn = document.getElementById('startButton');
+    const statusText = document.getElementById('statusText');
+    const statusLine = document.getElementById('statusLine');
+    const container = document.getElementById('startContainer');
+
+    async function hasInternet() {
+      if (!navigator.onLine) return false;
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 3000);
+        await fetch('https://www.google.com/generate_204', {
+          mode: 'no-cors',
+          signal: controller.signal
+        });
+        clearTimeout(timeout);
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }
+
+    startBtn.addEventListener('click', async () => {
+      startBtn.disabled = true;
+      statusLine.classList.remove('error', 'ok');
+      statusText.textContent = 'Checking network connectivity...';
+
+      const online = await hasInternet();
+      if (!online) {
+        statusLine.classList.add('error');
+        statusText.textContent = 'Initialization failed: No internet connection.';
+        startBtn.disabled = false;
+        return;
+      }
+
+      statusLine.classList.add('ok');
+      statusText.textContent = 'Connection OK. Spinning up learning console...';
+      container.classList.add('starting');
+
+      setTimeout(() => {
+        window.location.href = 'chat.html';
+      }, 900);
+    });
+  </script>
+</body>
+</html>
