@@ -12,7 +12,7 @@
 **Email**: ishandaksh1000@gmail.com  
 **GitHub**: https://github.com/patchyevolve  
 **Project**: Emotion-Aware Learning Companion  
-**Date**: November 2024
+**Date**: November 2025
 
 ---
 
