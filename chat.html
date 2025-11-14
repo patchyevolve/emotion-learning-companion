@@ -566,7 +566,8 @@
     /* Responsive */
     @media (max-width: 1400px) {
       .dashboard-layout {
-        grid-template-columns: 240px 1fr 350px;
+        grid-template-columns: 220px 1fr 320px;
+        gap: var(--spacing-md);
       }
     }
 
@@ -576,6 +577,7 @@
         gap: var(--spacing-lg);
         height: auto;
         min-height: calc(100vh - 80px);
+        padding: var(--spacing-md);
       }
 
       .sidebar-tools {
@@ -583,22 +585,27 @@
         overflow-x: auto;
         overflow-y: hidden;
         height: auto;
+        gap: var(--spacing-sm);
+        padding-bottom: var(--spacing-sm);
       }
 
       .tool-btn {
-        min-width: 120px;
+        min-width: 140px;
+        white-space: nowrap;
+        font-size: 0.9rem;
       }
 
       .emotion-panel {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         height: auto;
         max-height: none;
+        gap: var(--spacing-md);
       }
       
       .chat-container {
-        height: 70vh;
-        min-height: 500px;
+        height: 65vh;
+        min-height: 450px;
       }
 
       .doc-panel {
@@ -610,7 +617,6 @@
         display: block;
       }
       
-      /* Maintain message alignment on tablet/small desktop */
       .message {
         max-width: 80%;
       }
@@ -624,29 +630,74 @@
       }
     }
 
-    /* Mobile devices - adjusted max-width and maintained alignment */
+    /* Tablet and small desktop */
     @media (max-width: 768px) {
       html, body {
         overflow-y: auto;
       }
       
-      .dashboard-layout {
+      .dashboard-nav {
         padding: var(--spacing-md);
-        height: auto;
-        min-height: calc(100vh - 80px);
+      }
+      
+      .nav-inner {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+      }
+      
+      .nav-actions {
+        display: flex;
+        flex-direction: row;
+        gap: var(--spacing-sm);
+        width: 100%;
+      }
+      
+      .nav-actions .btn {
+        flex: 1;
+        font-size: 0.875rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+      }
+      
+      .dashboard-layout {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-md);
+      }
+      
+      .sidebar-tools {
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
+      }
+      
+      .tool-btn {
+        min-width: 110px;
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
       }
       
       .chat-container {
-        height: 60vh;
+        height: 55vh;
         min-height: 400px;
+      }
+      
+      .chat-header-modern {
+        padding: var(--spacing-md);
+      }
+      
+      .chat-title {
+        font-size: 1.25rem;
+      }
+      
+      .chat-subtitle {
+        font-size: 0.8rem;
       }
 
       .message {
         max-width: 85%;
-        padding: var(--spacing-md) var(--spacing-lg);
+        padding: var(--spacing-md);
+        font-size: 0.9rem;
       }
       
-      /* Ensure alignment is maintained on mobile */
       .message.user {
         align-self: flex-end;
       }
@@ -655,56 +706,196 @@
         align-self: flex-start;
       }
       
-      /* Adjust spacing for smaller screens */
       .messages-container {
         padding: var(--spacing-md);
-        gap: var(--spacing-md);
+        gap: var(--spacing-lg);
       }
       
-      /* Adjust label positioning for mobile */
       .message.user::before,
       .message.ai::before {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
+        top: -18px;
       }
       
       .message.ai::after {
         left: 75px;
-      }
-
-      .nav-actions {
-        flex-direction: column;
-        gap: var(--spacing-sm);
+        top: -18px;
       }
       
-      /* Ensure input area remains usable on mobile */
       .input-area {
         padding: var(--spacing-md);
       }
       
       .input-wrapper {
+        flex-wrap: wrap;
         gap: var(--spacing-sm);
       }
       
       .chat-input {
+        flex: 1 1 100%;
+        min-width: 100%;
         padding: var(--spacing-sm) var(--spacing-md);
-        font-size: 0.9375rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+      }
+      
+      #summarizeBtn {
+        flex: 1;
+        min-width: 120px;
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
+      }
+      
+      .send-button {
+        flex: 1;
+        min-width: 120px;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.9rem;
+        justify-content: center;
+      }
+      
+      .emotion-panel {
+        grid-template-columns: 1fr;
+      }
+      
+      .emotion-card {
+        padding: var(--spacing-md);
+      }
+      
+      .webcam-container {
+        aspect-ratio: 16/9;
       }
     }
     
-    /* Extra small mobile devices */
+    /* Mobile devices */
     @media (max-width: 480px) {
+      .dashboard-nav {
+        padding: var(--spacing-sm);
+      }
+      
+      .logo-dashboard {
+        font-size: 1rem;
+      }
+      
+      .nav-actions {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+      
+      .nav-actions .btn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
+      }
+      
+      .dashboard-layout {
+        padding: var(--spacing-xs);
+      }
+      
+      .sidebar-tools {
+        padding: var(--spacing-xs) 0;
+      }
+      
+      .tool-btn {
+        min-width: 100px;
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+        gap: var(--spacing-xs);
+      }
+      
+      .chat-container {
+        height: 50vh;
+        min-height: 350px;
+      }
+      
+      .chat-header-modern {
+        padding: var(--spacing-sm);
+      }
+      
+      .chat-title {
+        font-size: 1.1rem;
+        gap: var(--spacing-xs);
+      }
+      
+      .chat-subtitle {
+        font-size: 0.75rem;
+        line-height: 1.4;
+      }
+      
+      #maxTokensSelect {
+        max-width: 180px;
+        font-size: 0.75rem;
+      }
+
       .message {
         max-width: 90%;
         padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.85rem;
+        margin-top: 20px;
       }
       
       .messages-container {
         padding: var(--spacing-sm);
-        gap: var(--spacing-sm);
+        gap: var(--spacing-md);
       }
       
+      .message.user::before,
+      .message.ai::before {
+        font-size: 0.6rem;
+        top: -16px;
+      }
+      
+      .message.ai::after {
+        left: 70px;
+        top: -16px;
+        font-size: 0.65rem;
+      }
+      
+      .input-area {
+        padding: var(--spacing-sm);
+      }
+      
+      .input-wrapper {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+      }
+      
+      .chat-input {
+        width: 100%;
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
+        min-height: 40px;
+      }
+      
+      #summarizeBtn,
       .send-button {
-        padding: var(--spacing-sm) var(--spacing-md);
+        width: 100%;
+        padding: var(--spacing-sm);
+        font-size: 0.85rem;
+      }
+      
+      .emotion-card {
+        padding: var(--spacing-sm);
+      }
+      
+      .emotion-card-title {
+        font-size: 1rem;
+      }
+      
+      .emotion-card-subtitle {
+        font-size: 0.75rem;
+      }
+      
+      .webcam-container {
+        aspect-ratio: 4/3;
+      }
+      
+      .progress-item {
+        margin-bottom: var(--spacing-sm);
+      }
+      
+      .progress-label {
+        font-size: 0.75rem;
       }
     }
   </style>
