@@ -12,7 +12,25 @@ console.log("Loaded GROQ_API_KEY?", process.env.GROQ_API_KEY ? "YES" : "NO");
 
 const app = express();
 app.use(express.json({ limit: "2mb" }));
-app.use(cors());  
+
+// CORS configuration for production
+const corsOptions = {
+  origin: [
+    'http://localhost:8080',
+    'http://localhost:3000',
+    'https://keen-creponne-2dff93.netlify.app',
+    /\.netlify\.app$/  // Allow all Netlify subdomains
+  ],
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));  
 
 // ----------------------------
 // ENV & KEY CHECK
