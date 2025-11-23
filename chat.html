@@ -22,12 +22,19 @@
       overflow: hidden;
       background: var(--bg-primary);
     }
+    
+    @media (max-width: 1024px) {
+      html, body {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+    }
 
     .dashboard-nav {
       background: rgba(15, 23, 42, 0.95);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--border-color);
-      padding: var(--spacing-lg) var(--spacing-xl);
+      padding: var(--spacing-md) var(--spacing-lg);
       position: sticky;
       top: 0;
       z-index: var(--z-sticky);
@@ -39,10 +46,11 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: var(--spacing-md);
     }
 
     .logo-dashboard {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
       background: var(--bg-gradient);
       -webkit-background-clip: text;
@@ -56,41 +64,80 @@
     }
 
     .dashboard-layout {
-      display: grid;
-      grid-template-columns: 280px 1fr 400px;
-      gap: var(--spacing-xl);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
       max-width: 1800px;
       margin: 0 auto;
-      padding: var(--spacing-xl);
-      height: calc(100vh - 80px);
-      overflow: hidden;
+      padding: var(--spacing-md);
+      min-height: calc(100vh - 64px);
+    }
+    
+    /* Desktop: 3-column grid */
+    @media (min-width: 1025px) {
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 240px 1fr 360px;
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        height: calc(100vh - 64px);
+        overflow: hidden;
+      }
     }
 
     /* Sidebar - Tools */
     .sidebar-tools {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: var(--spacing-md);
-      height: 100%;
-      max-height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: var(--spacing-sm) 0;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Desktop: vertical sidebar */
+    @media (min-width: 1025px) {
+      .sidebar-tools {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0;
+      }
     }
 
     .tool-btn {
-      width: 100%;
+      flex: 1 1 auto;
+      min-width: 0;
       padding: var(--spacing-md);
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       color: var(--text-primary);
-      font-size: 1rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all var(--transition-base);
       display: flex;
       align-items: center;
-      gap: var(--spacing-md);
+      justify-content: center;
+      gap: var(--spacing-sm);
       font-weight: 500;
+      white-space: nowrap;
+    }
+    
+    /* Desktop: full width buttons */
+    @media (min-width: 1025px) {
+      .tool-btn {
+        width: 100%;
+        flex: none;
+        min-width: auto;
+        justify-content: flex-start;
+        gap: var(--spacing-md);
+        font-size: 1rem;
+      }
     }
 
     .tool-btn:hover {
@@ -114,23 +161,33 @@
       border-radius: var(--radius-2xl);
       overflow: hidden;
       box-shadow: var(--shadow-xl);
-      height: 100%;
-      max-height: 100%;
+      height: calc(100vh - 180px);
+      min-height: 500px;
+    }
+    
+    /* Desktop: full height */
+    @media (min-width: 1025px) {
+      .chat-container {
+        height: 100%;
+        max-height: 100%;
+        min-height: auto;
+      }
     }
 
     .chat-header-modern {
-      padding: var(--spacing-xl);
+      padding: var(--spacing-lg);
       border-bottom: 1px solid var(--border-color);
       background: var(--bg-tertiary);
+      flex-shrink: 0;
     }
 
     .chat-title {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       font-weight: 700;
       margin-bottom: var(--spacing-xs);
       display: flex;
       align-items: center;
-      gap: var(--spacing-md);
+      gap: var(--spacing-sm);
     }
 
     .chat-subtitle {
@@ -139,15 +196,15 @@
     }
 
     .messages-container {
-      flex: 1;
+      flex: 1 1 auto;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: var(--spacing-xl);
+      padding: var(--spacing-lg);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-xl);
+      gap: var(--spacing-lg);
       background: var(--bg-primary);
-      min-height: 0;
+      min-height: 200px;
       max-height: 100%;
     }
     
@@ -172,13 +229,14 @@
 
     .message {
       max-width: 75%;
-      padding: var(--spacing-lg) var(--spacing-xl);
-      border-radius: var(--radius-xl);
-      line-height: 1.6;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      line-height: 1.5;
       animation: fadeIn 0.3s ease-out;
       word-wrap: break-word;
       position: relative;
-      margin-top: 24px;
+      margin-top: 20px;
+      font-size: 0.95rem;
     }
 
     .message.user {
@@ -256,28 +314,29 @@
     }
 
     .input-area {
-      padding: var(--spacing-xl);
+      padding: var(--spacing-md);
       border-top: 1px solid var(--border-color);
       background: var(--bg-secondary);
+      flex-shrink: 0;
     }
 
     .input-wrapper {
-      display: flex;
-      gap: var(--spacing-md);
-      align-items: flex-end;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
     }
 
     .chat-input {
       flex: 1;
-      padding: var(--spacing-md) var(--spacing-lg);
+      padding: var(--spacing-sm) var(--spacing-md);
       background: var(--bg-tertiary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       color: var(--text-primary);
-      font-size: 1rem;
+      font-size: 0.95rem;
       resize: none;
-      min-height: 50px;
-      max-height: 150px;
+      min-height: 44px;
+      max-height: 120px;
       font-family: inherit;
       transition: all var(--transition-base);
     }
@@ -289,7 +348,7 @@
     }
 
     .send-button {
-      padding: var(--spacing-md) var(--spacing-xl);
+      padding: var(--spacing-sm) var(--spacing-lg);
       background: var(--primary);
       color: white;
       border: none;
@@ -299,7 +358,26 @@
       transition: all var(--transition-base);
       display: flex;
       align-items: center;
+      gap: var(--spacing-xs);
+      font-size: 0.95rem;
+      height: 44px;
+    }
+    
+    .send-button span {
+      font-size: 0.875rem;
+    }
+    
+    .button-row {
+      display: flex;
       gap: var(--spacing-sm);
+      align-items: center;
+    }
+    
+    #summarizeBtn {
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: 0.9rem;
+      white-space: nowrap;
+      height: 44px;
     }
 
     .send-button:hover:not(:disabled) {
@@ -315,13 +393,20 @@
 
     /* Emotion Panel */
     .emotion-panel {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-lg);
-      height: 100%;
-      max-height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
+      display: none;
+    }
+    
+    /* Desktop: show emotion panel */
+    @media (min-width: 1025px) {
+      .emotion-panel {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        height: 100%;
+        max-height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
     }
     
     /* Custom scrollbar for emotion panel */
@@ -345,8 +430,8 @@
     .emotion-card {
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
-      border-radius: var(--radius-xl);
-      padding: var(--spacing-xl);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
       box-shadow: var(--shadow-md);
     }
 
@@ -355,7 +440,7 @@
     }
 
     .emotion-card-title {
-      font-size: 1.125rem;
+      font-size: 1rem;
       font-weight: 600;
       margin-bottom: var(--spacing-xs);
       display: flex;
@@ -371,12 +456,12 @@
     .webcam-container {
       position: relative;
       width: 100%;
-      aspect-ratio: 4/3;
-      border-radius: var(--radius-lg);
+      aspect-ratio: 16/9;
+      border-radius: var(--radius-md);
       overflow: hidden;
       background: var(--bg-primary);
       border: 2px solid var(--border-color);
-      margin-bottom: var(--spacing-lg);
+      margin-bottom: var(--spacing-md);
     }
 
     .webcam-container video {
@@ -554,17 +639,22 @@
       background: var(--bg-secondary);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-sm);
+      gap: var(--spacing-md);
       flex-shrink: 0;
     }
     
     .doc-panel-footer .btn {
       width: 100%;
       justify-content: center;
+      margin-bottom: 0 !important;
+    }
+    
+    .doc-panel-footer label.btn {
+      margin-bottom: 0 !important;
     }
 
     /* Responsive */
-    @media (max-width: 1400px) {
+    @media (min-width: 1025px) and (max-width: 1400px) {
       .dashboard-layout {
         grid-template-columns: 220px 1fr 320px;
         gap: var(--spacing-md);
@@ -572,49 +662,6 @@
     }
 
     @media (max-width: 1024px) {
-      .dashboard-layout {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
-        height: auto;
-        min-height: calc(100vh - 80px);
-        padding: var(--spacing-md);
-      }
-
-      .sidebar-tools {
-        flex-direction: row;
-        overflow-x: auto;
-        overflow-y: hidden;
-        height: auto;
-        gap: var(--spacing-sm);
-        padding-bottom: var(--spacing-sm);
-      }
-
-      .tool-btn {
-        min-width: auto;
-        width: 52px;
-        height: 52px;
-        padding: var(--spacing-sm);
-        font-size: 1.35rem;
-        justify-content: center;
-      }
-      
-      .tool-btn span {
-        display: none;
-      }
-
-      .emotion-panel {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        height: auto;
-        max-height: none;
-        gap: var(--spacing-md);
-      }
-      
-      .chat-container {
-        height: 65vh;
-        min-height: 450px;
-      }
-
       .doc-panel {
         width: 100%;
         max-width: 100%;
@@ -667,21 +714,27 @@
       }
       
       .dashboard-layout {
-        padding: var(--spacing-sm);
-        gap: var(--spacing-md);
+        padding: var(--spacing-xs);
+        gap: var(--spacing-xs);
       }
       
       .sidebar-tools {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
         gap: var(--spacing-xs);
         padding: var(--spacing-xs);
+        height: auto;
+        max-height: 60px;
         justify-content: flex-start;
+        margin-bottom: 0;
       }
       
       .tool-btn {
         min-width: auto;
         width: 48px;
         height: 48px;
-        padding: var(--spacing-sm);
+        padding: var(--spacing-xs);
         font-size: 1.25rem;
         justify-content: center;
       }
@@ -690,9 +743,25 @@
         display: none;
       }
       
+      /* Fix hamburger alignment */
+      .nav-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .hamburger {
+        margin-left: auto;
+      }
+      
       .chat-container {
-        height: 55vh;
-        min-height: 400px;
+        height: calc(100vh - 160px);
+        min-height: 500px;
+      }
+      
+      .messages-container {
+        flex: 1 1 auto;
+        min-height: 200px;
       }
       
       .chat-header-modern {
@@ -705,6 +774,10 @@
       
       .chat-subtitle {
         font-size: 0.8rem;
+      }
+      
+      .input-area {
+        padding: var(--spacing-md);
       }
 
       .message {
@@ -738,35 +811,43 @@
       }
       
       .input-area {
-        padding: var(--spacing-md);
+        padding: var(--spacing-md) !important;
+        border-top: 1px solid var(--border-color) !important;
+        background: var(--bg-secondary);
       }
       
-      .input-wrapper {
-        flex-wrap: wrap;
-        gap: var(--spacing-sm);
+      .input-wrapper > div {
+        flex-direction: column !important;
+        gap: var(--spacing-sm) !important;
       }
       
       .chat-input {
-        flex: 1 1 100%;
-        min-width: 100%;
+        width: 100% !important;
+        flex: none !important;
         padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.9rem;
         min-height: 44px;
+        border-radius: var(--radius-lg);
       }
       
       #summarizeBtn {
-        flex: 1;
-        min-width: 120px;
-        padding: var(--spacing-sm);
-        font-size: 0.85rem;
+        flex: 1 1 50%;
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: 0.875rem;
+        white-space: nowrap;
+        border-radius: var(--radius-lg);
+        min-width: 0;
+        height: 44px;
       }
       
       .send-button {
-        flex: 1;
-        min-width: 120px;
+        flex: 1 1 50%;
         padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.9rem;
         justify-content: center;
+        border-radius: var(--radius-lg);
+        min-width: 0;
+        height: 44px;
       }
       
       .emotion-panel {
@@ -811,6 +892,7 @@
         padding: var(--spacing-xs) 0;
       }
       
+      /* Icon-only on very small screens */
       .tool-btn {
         min-width: auto;
         width: 44px;
@@ -825,8 +907,13 @@
       }
       
       .chat-container {
-        height: 50vh;
-        min-height: 350px;
+        height: calc(100vh - 140px);
+        min-height: 450px;
+      }
+      
+      .messages-container {
+        flex: 1 1 auto;
+        min-height: 150px;
       }
       
       .chat-header-modern {
@@ -873,26 +960,44 @@
       }
       
       .input-area {
-        padding: var(--spacing-sm);
+        padding: var(--spacing-md);
+        background: var(--bg-secondary);
+        border-top: 1px solid var(--border-color);
       }
       
       .input-wrapper {
         flex-direction: column;
-        gap: var(--spacing-xs);
+        gap: var(--spacing-sm);
       }
       
       .chat-input {
         width: 100%;
-        padding: var(--spacing-sm);
-        font-size: 0.85rem;
-        min-height: 40px;
+        padding: var(--spacing-md);
+        font-size: 0.9rem;
+        min-height: 44px;
+        border-radius: var(--radius-lg);
       }
       
-      #summarizeBtn,
-      .send-button {
+      .button-row {
+        display: flex;
+        gap: var(--spacing-md);
         width: 100%;
-        padding: var(--spacing-sm);
-        font-size: 0.85rem;
+      }
+      
+      #summarizeBtn {
+        flex: 1 1 50%;
+        padding: var(--spacing-md);
+        font-size: 0.875rem;
+        border-radius: var(--radius-lg);
+        min-width: 0;
+      }
+      
+      .send-button {
+        flex: 1 1 50%;
+        padding: var(--spacing-md);
+        font-size: 0.9rem;
+        border-radius: var(--radius-lg);
+        min-width: 0;
       }
       
       .emotion-card {
@@ -919,6 +1024,115 @@
         font-size: 0.75rem;
       }
     }
+    
+    /* ============================================
+       SIMPLE MOBILE IMPROVEMENTS
+       ============================================ */
+    
+    /* Hamburger Menu Button */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      margin-left: auto;
+    }
+    
+    .hamburger span {
+      width: 24px;
+      height: 3px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 250px;
+      height: 100vh;
+      background: var(--bg-secondary);
+      box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transition: right 0.3s;
+      padding: 20px;
+    }
+    
+    .mobile-menu.open {
+      right: 0;
+    }
+    
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    
+    .mobile-overlay.open {
+      display: block;
+    }
+    
+    /* Mobile Emotion Section */
+    .emotion-section-mobile {
+      display: block;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-lg);
+    }
+    
+    /* Desktop: hide mobile emotion section */
+    @media (min-width: 1025px) {
+      .emotion-section-mobile {
+        display: none;
+      }
+    }
+    
+    .emotion-section-mobile .webcam-container {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto var(--spacing-md);
+      aspect-ratio: 4/3;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color);
+    }
+    
+    .emotion-section-mobile video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    
+    .emotion-section-mobile .emotion-display {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 1024px) {
+      /* Show hamburger, hide desktop nav */
+      .hamburger {
+        display: flex;
+      }
+      
+      .nav-actions {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -926,12 +1140,35 @@
   <nav class="dashboard-nav">
     <div class="nav-inner">
       <div class="logo-dashboard">🎓 AI Learning Dashboard</div>
+      <button class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
       <div class="nav-actions">
         <button class="btn btn-secondary" onclick="window.location.href='home.html'">Home</button>
         <button class="btn btn-primary" id="endSessionBtn">End Session</button>
       </div>
     </div>
   </nav>
+  
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <h3 style="margin-bottom: 20px;">Menu</h3>
+    <button class="btn btn-secondary" onclick="window.location.href='home.html'" style="width:100%; margin:10px 0;">
+      🏠 Home
+    </button>
+    <button class="btn btn-secondary" onclick="window.location.href='analytics.html'" style="width:100%; margin:10px 0;">
+      📊 Analytics
+    </button>
+    <button class="btn btn-primary" id="endSessionMobile" style="width:100%; margin:10px 0;">
+      🚪 End Session
+    </button>
+  </div>
 
   <!-- Dashboard Layout -->
   <div class="dashboard-layout">
@@ -975,19 +1212,21 @@
 
       <div class="input-area">
         <div class="input-wrapper">
-          <textarea 
-            id="userInput" 
-            class="chat-input" 
-            placeholder="Type your question or ask for a summary..."
-            rows="1"
-          ></textarea>
-          <button id="summarizeBtn" class="btn btn-secondary" title="Summarize document" disabled style="white-space: nowrap;">
-            📄 Summarize
-          </button>
-          <button id="sendBtn" class="send-button">
-            Send
-            <span>➤</span>
-          </button>
+          <div style="display: flex; gap: var(--spacing-sm); align-items: flex-end; width: 100%;">
+            <textarea 
+              id="userInput" 
+              class="chat-input" 
+              placeholder="Type your question or ask for a summary..."
+              rows="1"
+            ></textarea>
+            <button id="summarizeBtn" class="btn btn-secondary" title="Summarize document" disabled>
+              📄 Summarize
+            </button>
+            <button id="sendBtn" class="send-button">
+              Send
+              <span>➤</span>
+            </button>
+          </div>
         </div>
       </div>
     </main>
@@ -1077,6 +1316,23 @@
       </div>
     </aside>
   </div>
+  
+  <!-- Mobile Emotion Section (Shows below chat on mobile) -->
+  <div class="emotion-section-mobile">
+    <h3 style="margin-bottom: var(--spacing-md); font-size: 1.25rem;">😊 Emotion Detection</h3>
+    <div class="webcam-container">
+      <video id="cameraWidget" autoplay muted playsinline></video>
+    </div>
+    <div class="emotion-display">
+      <div class="emotion-label">
+        <span>Current Emotion:</span>
+      </div>
+      <div class="emotion-value">
+        <span id="moodDotMobile" class="emotion-dot"></span>
+        <span id="emotionMobile">—</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Document Panel Overlay -->
   <div class="doc-overlay" id="docOverlay"></div>
@@ -1100,16 +1356,16 @@
     </div>
 
     <div class="doc-panel-footer">
-      <label class="btn btn-primary" style="cursor: pointer; margin-bottom: var(--spacing-xs); display: flex; align-items: center; justify-content: center;">
+      <label class="btn btn-primary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;">
         📄 Upload File
         <input id="fileInput" type="file" accept=".pdf,.txt" style="display: none;" />
       </label>
-      <button id="indexBtn" class="btn btn-secondary" style="margin-bottom: var(--spacing-xs);">⚡ Index Document</button>
-      <button id="clearDocBtn" class="btn btn-secondary" style="background: #ef4444; color: white; margin-bottom: var(--spacing-xs);">🗑️ Clear</button>
-      <div id="docIndexProgressBar" class="progress-bar" style="margin-top: var(--spacing-xs); display: none;">
+      <button id="indexBtn" class="btn btn-secondary">⚡ Index Document</button>
+      <button id="clearDocBtn" class="btn btn-secondary" style="background: #ef4444; color: white;">🗑️ Clear</button>
+      <div id="docIndexProgressBar" class="progress-bar" style="display: none;">
         <div id="docIndexProgressFill" class="progress-fill" style="width: 0%;"></div>
       </div>
-      <div id="indexStatus" style="font-size: 0.75rem; color: var(--text-muted); text-align: center; padding-top: var(--spacing-xs); border-top: 1px solid var(--border-color); margin-top: var(--spacing-xs); min-height: 20px;"></div>
+      <div id="indexStatus" style="font-size: 0.75rem; color: var(--text-muted); text-align: center; padding-top: var(--spacing-sm); border-top: 1px solid var(--border-color); min-height: 20px;"></div>
     </div>
   </div>
 
@@ -1169,6 +1425,56 @@
       saveAnalytics();
       window.location.href = 'analytics.html';
     });
+    
+    document.getElementById('endSessionMobile')?.addEventListener('click', () => {
+      saveAnalytics();
+      window.location.href = 'analytics.html';
+    });
+    
+    // Hamburger Menu
+    const hamburger = document.getElementById('hamburgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+    
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        mobileOverlay.classList.toggle('open');
+      });
+      
+      mobileOverlay.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        mobileOverlay.classList.remove('open');
+      });
+    }
+    
+    // Connect mobile emotion section to main camera
+    setTimeout(() => {
+      const mainCamera = document.getElementById('camera');
+      const mobileCamera = document.getElementById('cameraWidget');
+      
+      if (mainCamera && mobileCamera && mainCamera.srcObject) {
+        mobileCamera.srcObject = mainCamera.srcObject;
+      }
+      
+      // Update mobile emotion display from main emotion
+      const updateMobileEmotion = () => {
+        const mainEmotion = document.getElementById('dominantEmotion');
+        const mainDot = document.getElementById('moodDot');
+        const mobileEmotion = document.getElementById('emotionMobile');
+        const mobileDot = document.getElementById('moodDotMobile');
+        
+        if (mainEmotion && mobileEmotion) {
+          mobileEmotion.textContent = mainEmotion.textContent;
+        }
+        
+        if (mainDot && mobileDot) {
+          mobileDot.style.background = mainDot.style.background;
+        }
+      };
+      
+      setInterval(updateMobileEmotion, 500);
+    }, 2000);
 
     // Close document panel when clicking overlay
     const docOverlay = document.getElementById('docOverlay');

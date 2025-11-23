@@ -111,7 +111,7 @@ export class RAGSystem {
   }
 
   /**
-   * Index document (chunk and embed) - Optimized for speed
+   * Index document (chunk and embed) - With fallback to keyword search
    */
   async indexDocument(text) {
     try {
@@ -125,56 +125,73 @@ export class RAGSystem {
       
       this.chunks = [];
       
-      // Process chunks in batches for better performance
-      const batchSize = 5;
-      const totalBatches = Math.ceil(chunks.length / batchSize);
-      
-      for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
-        const batchStart = batchIndex * batchSize;
-        const batchEnd = Math.min(batchStart + batchSize, chunks.length);
-        const batch = chunks.slice(batchStart, batchEnd);
+      // Try to use embeddings first
+      try {
+        await this.initialize();
         
-        this.updateStatus(`Embedding batch ${batchIndex + 1}/${totalBatches} (${batchStart + 1}-${batchEnd}/${chunks.length})`);
+        // Process chunks in batches for better performance
+        const batchSize = 5;
+        const totalBatches = Math.ceil(chunks.length / batchSize);
         
-        // Process batch in parallel
-        const batchPromises = batch.map(async (chunk, idx) => {
-          try {
-            const embedding = await this.embedText(chunk);
-            return {
-              text: chunk,
-              embedding: embedding,
-              index: batchStart + idx
-            };
-          } catch (err) {
-            console.error(`Failed to embed chunk ${batchStart + idx + 1}:`, err);
-            return null;
+        for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
+          const batchStart = batchIndex * batchSize;
+          const batchEnd = Math.min(batchStart + batchSize, chunks.length);
+          const batch = chunks.slice(batchStart, batchEnd);
+          
+          this.updateStatus(`Embedding batch ${batchIndex + 1}/${totalBatches} (${batchStart + 1}-${batchEnd}/${chunks.length})`);
+          
+          // Process batch in parallel
+          const batchPromises = batch.map(async (chunk, idx) => {
+            try {
+              const embedding = await this.embedText(chunk);
+              return {
+                text: chunk,
+                embedding: embedding,
+                index: batchStart + idx
+              };
+            } catch (err) {
+              console.error(`Failed to embed chunk ${batchStart + idx + 1}:`, err);
+              return null;
+            }
+          });
+          
+          const batchResults = await Promise.all(batchPromises);
+          
+          // Add successful embeddings in order
+          batchResults.forEach(result => {
+            if (result) {
+              this.chunks[result.index] = {
+                text: result.text,
+                embedding: result.embedding
+              };
+            }
+          });
+          
+          // Filter out null results and notify progress
+          this.chunks = this.chunks.filter(c => c !== null && c !== undefined);
+          
+          if (this.onProgress) {
+            this.onProgress(this.chunks.length, chunks.length);
           }
-        });
-        
-        const batchResults = await Promise.all(batchPromises);
-        
-        // Add successful embeddings in order
-        batchResults.forEach(result => {
-          if (result) {
-            this.chunks[result.index] = {
-              text: result.text,
-              embedding: result.embedding
-            };
-          }
-        });
-        
-        // Filter out null results and notify progress
-        this.chunks = this.chunks.filter(c => c !== null && c !== undefined);
-        
-        if (this.onProgress) {
-          this.onProgress(this.chunks.length, chunks.length);
-        }
 
-        // Yield to the event loop so the UI can update between batches
-        await new Promise(resolve => setTimeout(resolve, 0));
+          // Yield to the event loop so the UI can update between batches
+          await new Promise(resolve => setTimeout(resolve, 0));
+        }
+        
+        this.updateStatus(`✅ Indexed ${this.chunks.length} chunks with embeddings`);
+        
+      } catch (embeddingError) {
+        // Fallback to keyword-based search
+        console.warn('⚠️ Embedding failed, using keyword-based search:', embeddingError);
+        this.updateStatus('Using keyword search (embedding unavailable)');
+        
+        this.chunks = chunks.map(chunk => ({
+          text: chunk,
+          embedding: null
+        }));
+        
+        this.updateStatus(`✅ Indexed ${this.chunks.length} chunks (keyword mode)`);
       }
-      
-      this.updateStatus(`✅ Indexed ${this.chunks.length} chunks`);
       
       if (this.onIndexingComplete) {
         this.onIndexingComplete(this.chunks.length);
@@ -190,23 +207,79 @@ export class RAGSystem {
   }
 
   /**
-   * Search for relevant chunks
+   * Search for relevant chunks - Hybrid approach with fallback
    */
   async search(query, topK = CONFIG.RAG.topK) {
     if (!this.chunks || this.chunks.length === 0) {
       throw new Error('No document indexed');
     }
 
-    const queryEmbedding = await this.embedText(query);
+    // Check if embeddings are available
+    const hasEmbeddings = this.chunks.some(c => c.embedding !== null);
     
-    const scored = this.chunks.map(chunk => ({
-      score: cosineSimilarity(queryEmbedding, chunk.embedding),
-      text: chunk.text
-    }));
+    if (hasEmbeddings && this.isInitialized) {
+      // Use semantic search
+      try {
+        const queryEmbedding = await this.embedText(query);
+        
+        const scored = this.chunks.map(chunk => ({
+          score: cosineSimilarity(queryEmbedding, chunk.embedding),
+          text: chunk.text
+        }));
+        
+        scored.sort((a, b) => b.score - a.score);
+        
+        return scored.slice(0, topK);
+        
+      } catch (embErr) {
+        console.warn('⚠️ Embedding query failed, falling back to keyword search:', embErr);
+        // Fall through to keyword search
+      }
+    }
+    
+    // Fallback: Use keyword-based search
+    return this.keywordSearch(query, topK);
+  }
+  
+  /**
+   * Keyword-based search fallback
+   */
+  keywordSearch(query, topK = CONFIG.RAG.topK) {
+    const queryLower = query.toLowerCase();
+    const queryWords = queryLower.split(/\s+/).filter(w => w.length > 2);
+    
+    const scored = this.chunks.map(chunk => {
+      const chunkLower = chunk.text.toLowerCase();
+      
+      // Count keyword matches
+      let score = 0;
+      queryWords.forEach(word => {
+        const matches = (chunkLower.match(new RegExp(word, 'g')) || []).length;
+        score += matches;
+      });
+      
+      // Bonus for exact phrase match
+      if (chunkLower.includes(queryLower)) {
+        score += 10;
+      }
+      
+      return {
+        score: score,
+        text: chunk.text
+      };
+    });
     
     scored.sort((a, b) => b.score - a.score);
     
-    return scored.slice(0, topK);
+    // Filter out chunks with zero score
+    const relevant = scored.filter(s => s.score > 0);
+    
+    // If no relevant chunks, return top chunks anyway
+    if (relevant.length === 0) {
+      return scored.slice(0, topK);
+    }
+    
+    return relevant.slice(0, topK);
   }
 
   /**

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Learning Analytics - AI Learning Platform</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" href="styles.css" />
   
@@ -177,9 +177,166 @@
       }
     }
 
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .analytics-container {
+        padding: 0 var(--spacing-lg) var(--spacing-2xl);
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: var(--spacing-lg);
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+    }
+    
     @media (max-width: 768px) {
+      .analytics-nav {
+        padding: var(--spacing-md);
+      }
+      
+      .nav-inner {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+      }
+      
+      .nav-actions {
+        display: flex;
+        gap: var(--spacing-sm);
+        width: 100%;
+      }
+      
+      .nav-actions .btn {
+        flex: 1;
+        font-size: 0.875rem;
+        padding: var(--spacing-sm);
+      }
+      
+      .analytics-container {
+        padding: 0 var(--spacing-md) var(--spacing-xl);
+      }
+      
+      .page-header {
+        margin-bottom: var(--spacing-xl);
+      }
+      
+      .page-title {
+        font-size: clamp(2rem, 8vw, 3rem);
+      }
+      
+      .page-subtitle {
+        font-size: 1rem;
+      }
+      
       .stats-grid {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-xl);
+      }
+      
+      .stat-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .stat-icon {
+        font-size: 2rem;
+      }
+      
+      .stat-value {
+        font-size: 2rem;
+      }
+      
+      .chart-card {
+        padding: var(--spacing-lg);
+      }
+      
+      .chart-container {
+        height: 280px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .analytics-nav {
+        padding: var(--spacing-sm);
+      }
+      
+      .logo-dashboard {
+        font-size: 1rem;
+      }
+      
+      .nav-actions {
+        flex-direction: column;
+      }
+      
+      .nav-actions .btn {
+        width: 100%;
+        font-size: 0.8rem;
+      }
+      
+      .analytics-container {
+        padding: 0 var(--spacing-sm) var(--spacing-lg);
+      }
+      
+      .page-title {
+        font-size: 1.75rem;
+      }
+      
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+      
+      .stat-card {
+        padding: var(--spacing-md);
+      }
+      
+      .stat-icon {
+        font-size: 1.75rem;
+        margin-bottom: var(--spacing-sm);
+      }
+      
+      .stat-label {
+        font-size: 0.75rem;
+      }
+      
+      .stat-value {
+        font-size: 1.75rem;
+      }
+      
+      .chart-card {
+        padding: var(--spacing-md);
+      }
+      
+      .chart-header {
+        margin-bottom: var(--spacing-md);
+        padding-bottom: var(--spacing-sm);
+      }
+      
+      .chart-title {
+        font-size: 1.1rem;
+      }
+      
+      .chart-subtitle {
+        font-size: 0.75rem;
+      }
+      
+      .chart-container {
+        height: 240px;
+      }
+      
+      .no-data {
+        padding: var(--spacing-xl);
+      }
+      
+      .no-data-icon {
+        font-size: 3rem;
+      }
+      
+      .no-data h2 {
+        font-size: 1.25rem;
       }
     }
   </style>

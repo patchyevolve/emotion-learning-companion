@@ -2,9 +2,9 @@
 export const CONFIG = {
   // RAG Configuration
   RAG: {
-    chunkSize: 2000,
-    overlap: 400,
-    modelName: "Xenova/all-MiniLM-L12-v2",
+    chunkSize: 800,
+    overlap: 200,
+    modelName: "Xenova/all-MiniLM-L6-v2",
     topK: 3
   },
   

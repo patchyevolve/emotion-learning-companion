@@ -1843,5 +1843,3 @@ This project would not have been possible without:
 
 ---
 
-*This report is intended for academic, research, and development purposes. All trademarks and registered trademarks are the property of their respective owners.*
-
