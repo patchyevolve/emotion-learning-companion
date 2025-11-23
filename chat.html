@@ -1169,21 +1169,22 @@
     
     /* Mobile Emotion Section */
     .emotion-section-mobile {
-      display: block;
+      display: none;
       background: var(--bg-secondary);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-xl);
       padding: var(--spacing-lg);
     }
     
-    /* Desktop: hide mobile emotion section */
-    @media (min-width: 1025px) {
+    /* Mobile: show mobile emotion section */
+    @media (max-width: 1024px) {
       .emotion-section-mobile {
-        display: none;
+        display: block;
       }
     }
     
     .emotion-section-mobile .webcam-container {
+      position: relative;
       width: 100%;
       max-width: 400px;
       margin: 0 auto var(--spacing-md);
@@ -1192,9 +1193,14 @@
       overflow: hidden;
       background: var(--bg-primary);
       border: 2px solid var(--border-color);
+      min-height: 200px;
     }
     
     .emotion-section-mobile video {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -1418,10 +1424,10 @@
   </div>
   
   <!-- Mobile Emotion Section (Shows below chat on mobile) -->
-  <div class="emotion-section-mobile">
+  <div class="emotion-section-mobile" id="mobileEmotionSection">
     <h3 style="margin-bottom: var(--spacing-md); font-size: 1.25rem;">😊 Emotion Detection</h3>
     <div class="webcam-container">
-      <video id="cameraWidget" autoplay muted playsinline></video>
+      <video id="cameraWidget" autoplay muted playsinline webkit-playsinline></video>
     </div>
     <div class="emotion-display">
       <div class="emotion-label">
@@ -1549,32 +1555,68 @@
     }
     
     // Connect mobile emotion section to main camera
-    setTimeout(() => {
+    const connectMobileCamera = async () => {
       const mainCamera = document.getElementById('camera');
       const mobileCamera = document.getElementById('cameraWidget');
       
-      if (mainCamera && mobileCamera && mainCamera.srcObject) {
-        mobileCamera.srcObject = mainCamera.srcObject;
+      if (mainCamera && mobileCamera) {
+        // If main camera has stream, share it
+        if (mainCamera.srcObject) {
+          mobileCamera.srcObject = mainCamera.srcObject;
+          
+          // Ensure video plays
+          try {
+            await mobileCamera.play();
+            console.log('✅ Mobile camera video playing');
+          } catch (err) {
+            console.warn('Mobile camera play error:', err);
+          }
+        } else {
+          // Wait for stream to be available
+          const checkStream = setInterval(async () => {
+            if (mainCamera.srcObject) {
+              mobileCamera.srcObject = mainCamera.srcObject;
+              
+              // Ensure video plays
+              try {
+                await mobileCamera.play();
+                console.log('✅ Mobile camera video playing (delayed)');
+              } catch (err) {
+                console.warn('Mobile camera play error:', err);
+              }
+              
+              clearInterval(checkStream);
+            }
+          }, 100);
+          
+          // Stop checking after 10 seconds
+          setTimeout(() => clearInterval(checkStream), 10000);
+        }
+      }
+    };
+    
+    // Try to connect immediately and after delay
+    connectMobileCamera();
+    setTimeout(connectMobileCamera, 2000);
+    setTimeout(connectMobileCamera, 4000);
+    
+    // Update mobile emotion display from main emotion
+    const updateMobileEmotion = () => {
+      const mainEmotion = document.getElementById('dominantEmotion');
+      const mainDot = document.getElementById('moodDot');
+      const mobileEmotion = document.getElementById('emotionMobile');
+      const mobileDot = document.getElementById('moodDotMobile');
+      
+      if (mainEmotion && mobileEmotion) {
+        mobileEmotion.textContent = mainEmotion.textContent;
       }
       
-      // Update mobile emotion display from main emotion
-      const updateMobileEmotion = () => {
-        const mainEmotion = document.getElementById('dominantEmotion');
-        const mainDot = document.getElementById('moodDot');
-        const mobileEmotion = document.getElementById('emotionMobile');
-        const mobileDot = document.getElementById('moodDotMobile');
-        
-        if (mainEmotion && mobileEmotion) {
-          mobileEmotion.textContent = mainEmotion.textContent;
-        }
-        
-        if (mainDot && mobileDot) {
-          mobileDot.style.background = mainDot.style.background;
-        }
-      };
-      
-      setInterval(updateMobileEmotion, 500);
-    }, 2000);
+      if (mainDot && mobileDot) {
+        mobileDot.style.background = mainDot.style.background;
+      }
+    };
+    
+    setInterval(updateMobileEmotion, 500);
 
     // Close document panel when clicking overlay
     const docOverlay = document.getElementById('docOverlay');
